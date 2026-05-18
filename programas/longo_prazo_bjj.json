@@ -1,0 +1,225 @@
+{
+  "nome": "Plano de 1 Ano — Musculação + BJJ",
+  "semana_inicio": "18/05/26",
+  "fases": [
+    {
+      "numero": 1,
+      "nome": "Adaptação/Hábito",
+      "semanas": 4,
+      "frequencia_semanal": 2,
+      "rpe_alvo": 6,
+      "rir_alvo": 4,
+      "deload_a_cada_semanas": 0,
+      "descanso_segundos": "60-90",
+      "sets_por_musculo_semana": {"min": 5, "max": 8},
+      "split": "Full Body 2x/semana",
+      "nota": "Prioridade: técnica e hábito. Não treinar perto da falha.",
+      "treinos": {
+        "A": [
+          {"exercicio": "Agachamento ou Leg Press", "musculo": "quadriceps", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Supino Plano", "musculo": "peitoral", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Remada Curvada ou Máquina", "musculo": "costas", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Desenvolvimento Ombros", "musculo": "ombros", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Prancha", "musculo": "core", "series": 3, "reps_alvo": "30-60s"}
+        ],
+        "B": [
+          {"exercicio": "Terra Romeno ou Cadeira Flexora", "musculo": "posterior", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Flexões ou Supino Inclinado", "musculo": "peitoral", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Puxada Alta", "musculo": "costas", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Elevação Lateral", "musculo": "ombros", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Crunch", "musculo": "core", "series": 3, "reps_alvo": "15-20"}
+        ]
+      }
+    },
+    {
+      "numero": 2,
+      "nome": "Construção da Base",
+      "semanas": 8,
+      "frequencia_semanal": 2,
+      "rpe_alvo": 7,
+      "rir_alvo": 3,
+      "deload_a_cada_semanas": 4,
+      "descanso_segundos": "90-120",
+      "sets_por_musculo_semana": {"min": 8, "max": 12},
+      "split": "Upper/Lower 2x/semana",
+      "nota": "A = Upper, B = Lower. Deload na semana 4 e 8 (50% do volume, mesma carga).",
+      "treinos": {
+        "A": [
+          {"exercicio": "Supino Plano", "musculo": "peitoral", "series": 4, "reps_alvo": "8-12"},
+          {"exercicio": "Puxada Alta", "musculo": "costas", "series": 4, "reps_alvo": "8-12"},
+          {"exercicio": "Desenvolvimento Ombros", "musculo": "ombros", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Remada Curvada", "musculo": "costas", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Tríceps Pulley", "musculo": "tríceps", "series": 2, "reps_alvo": "10-15"},
+          {"exercicio": "Rosca Direta", "musculo": "bíceps", "series": 2, "reps_alvo": "10-15"}
+        ],
+        "B": [
+          {"exercicio": "Agachamento", "musculo": "quadriceps", "series": 4, "reps_alvo": "8-12"},
+          {"exercicio": "Terra Romeno", "musculo": "posterior", "series": 4, "reps_alvo": "8-12"},
+          {"exercicio": "Leg Press", "musculo": "quadriceps", "series": 3, "reps_alvo": "10-15"},
+          {"exercicio": "Cadeira Flexora", "musculo": "posterior", "series": 2, "reps_alvo": "10-15"},
+          {"exercicio": "Panturrilha em Pé", "musculo": "panturrilha", "series": 3, "reps_alvo": "15-20"},
+          {"exercicio": "Prancha", "musculo": "core", "series": 3, "reps_alvo": "30-60s"}
+        ]
+      }
+    },
+    {
+      "numero": 3,
+      "nome": "Intensificação",
+      "semanas": 8,
+      "frequencia_semanal": 2,
+      "rpe_alvo": 8,
+      "rir_alvo": 2,
+      "deload_a_cada_semanas": 4,
+      "descanso_segundos": "120-180",
+      "sets_por_musculo_semana": {"min": 10, "max": 15},
+      "split": "Upper/Lower 2x/semana",
+      "nota": "A = Upper, B = Lower. Cargas mais pesadas, 1-2 RIR. Deload semanas 4 e 8.",
+      "treinos": {
+        "A": [
+          {"exercicio": "Supino Plano", "musculo": "peitoral", "series": 4, "reps_alvo": "6-10"},
+          {"exercicio": "Barra Fixa", "musculo": "costas", "series": 4, "reps_alvo": "6-10"},
+          {"exercicio": "Supino Inclinado", "musculo": "peitoral", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Remada Pronada", "musculo": "costas", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Press Arnold", "musculo": "ombros", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Tríceps Testa", "musculo": "tríceps", "series": 2, "reps_alvo": "8-12"},
+          {"exercicio": "Rosca Martelo", "musculo": "bíceps", "series": 2, "reps_alvo": "10-12"}
+        ],
+        "B": [
+          {"exercicio": "Agachamento", "musculo": "quadriceps", "series": 4, "reps_alvo": "6-10"},
+          {"exercicio": "Levantamento Terra", "musculo": "posterior", "series": 4, "reps_alvo": "5-8"},
+          {"exercicio": "Agachamento Búlgaro", "musculo": "quadriceps", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Cadeira Flexora", "musculo": "posterior", "series": 3, "reps_alvo": "10-12"},
+          {"exercicio": "Afundo", "musculo": "quadriceps", "series": 3, "reps_alvo": "10-12"},
+          {"exercicio": "Panturrilha Sentado", "musculo": "panturrilha", "series": 3, "reps_alvo": "15-20"},
+          {"exercicio": "Crunch com Carga", "musculo": "core", "series": 3, "reps_alvo": "12-15"}
+        ]
+      }
+    },
+    {
+      "numero": 4,
+      "nome": "Manutenção/Deload Estratégico",
+      "semanas": 4,
+      "frequencia_semanal": 2,
+      "rpe_alvo": 6,
+      "rir_alvo": 4,
+      "deload_a_cada_semanas": 0,
+      "descanso_segundos": "60-90",
+      "sets_por_musculo_semana": {"min": 4, "max": 6},
+      "split": "Full Body 2x/semana",
+      "nota": "Fase de recuperação. Volume baixo, carga mantida. Foco em técnica e mobilidade.",
+      "treinos": {
+        "A": [
+          {"exercicio": "Agachamento", "musculo": "quadriceps", "series": 2, "reps_alvo": "8-10"},
+          {"exercicio": "Supino Plano", "musculo": "peitoral", "series": 2, "reps_alvo": "8-10"},
+          {"exercicio": "Puxada Alta", "musculo": "costas", "series": 2, "reps_alvo": "8-10"},
+          {"exercicio": "Desenvolvimento Ombros", "musculo": "ombros", "series": 2, "reps_alvo": "10-12"},
+          {"exercicio": "Prancha", "musculo": "core", "series": 2, "reps_alvo": "30-45s"}
+        ],
+        "B": [
+          {"exercicio": "Terra Romeno", "musculo": "posterior", "series": 2, "reps_alvo": "8-10"},
+          {"exercicio": "Remada Curvada", "musculo": "costas", "series": 2, "reps_alvo": "8-10"},
+          {"exercicio": "Leg Press", "musculo": "quadriceps", "series": 2, "reps_alvo": "10-12"},
+          {"exercicio": "Elevação Lateral", "musculo": "ombros", "series": 2, "reps_alvo": "12-15"},
+          {"exercicio": "Crunch", "musculo": "core", "series": 2, "reps_alvo": "15"}
+        ]
+      }
+    },
+    {
+      "numero": 5,
+      "nome": "Novo Ciclo — Variação",
+      "semanas": 8,
+      "frequencia_semanal": 2,
+      "rpe_alvo": 7,
+      "rir_alvo": 3,
+      "deload_a_cada_semanas": 4,
+      "descanso_segundos": "90-120",
+      "sets_por_musculo_semana": {"min": 8, "max": 12},
+      "split": "Upper/Lower 2x/semana",
+      "nota": "Variação de exercícios. Trocar Supino por Halteres, Agachamento por Búlgaro, etc.",
+      "treinos": {
+        "A": [
+          {"exercicio": "Supino Inclinado com Halteres", "musculo": "peitoral", "series": 4, "reps_alvo": "8-12"},
+          {"exercicio": "Remada Unilateral", "musculo": "costas", "series": 4, "reps_alvo": "8-12"},
+          {"exercicio": "Supino com Halteres", "musculo": "peitoral", "series": 3, "reps_alvo": "10-12"},
+          {"exercicio": "Puxada Supinada", "musculo": "costas", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Elevação Frontal", "musculo": "ombros", "series": 2, "reps_alvo": "10-15"},
+          {"exercicio": "Tríceps Francês", "musculo": "tríceps", "series": 2, "reps_alvo": "10-15"},
+          {"exercicio": "Rosca Concentrada", "musculo": "bíceps", "series": 2, "reps_alvo": "10-12"}
+        ],
+        "B": [
+          {"exercicio": "Agachamento Búlgaro", "musculo": "quadriceps", "series": 4, "reps_alvo": "8-12"},
+          {"exercicio": "Terra Romeno com Halteres", "musculo": "posterior", "series": 4, "reps_alvo": "10-12"},
+          {"exercicio": "Leg Press 45°", "musculo": "quadriceps", "series": 3, "reps_alvo": "10-15"},
+          {"exercicio": "Mesa Flexora", "musculo": "posterior", "series": 2, "reps_alvo": "10-12"},
+          {"exercicio": "Afundo com Halteres", "musculo": "quadriceps", "series": 3, "reps_alvo": "10-12"},
+          {"exercicio": "Panturrilha em Pé", "musculo": "panturrilha", "series": 3, "reps_alvo": "15-20"},
+          {"exercicio": "Abdominal Infra", "musculo": "core", "series": 3, "reps_alvo": "15-20"}
+        ]
+      }
+    },
+    {
+      "numero": 6,
+      "nome": "Intensificação 2",
+      "semanas": 8,
+      "frequencia_semanal": 2,
+      "rpe_alvo": 9,
+      "rir_alvo": 1,
+      "deload_a_cada_semanas": 4,
+      "descanso_segundos": "120-180",
+      "sets_por_musculo_semana": {"min": 12, "max": 18},
+      "split": "Upper/Lower 2x/semana",
+      "nota": "Pico de intensidade. 1 RIR = 1 rep de sobra. Monitorar fadiga com BJJ atentamente.",
+      "treinos": {
+        "A": [
+          {"exercicio": "Supino Plano", "musculo": "peitoral", "series": 5, "reps_alvo": "5-8"},
+          {"exercicio": "Barra Fixa Lastrada", "musculo": "costas", "series": 5, "reps_alvo": "5-8"},
+          {"exercicio": "Supino Inclinado", "musculo": "peitoral", "series": 3, "reps_alvo": "8-10"},
+          {"exercicio": "Remada Baixa", "musculo": "costas", "series": 3, "reps_alvo": "8-10"},
+          {"exercicio": "Press Militar", "musculo": "ombros", "series": 3, "reps_alvo": "6-10"},
+          {"exercicio": "Tríceps Testa", "musculo": "tríceps", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Rosca Direta", "musculo": "bíceps", "series": 3, "reps_alvo": "8-12"}
+        ],
+        "B": [
+          {"exercicio": "Agachamento", "musculo": "quadriceps", "series": 5, "reps_alvo": "4-8"},
+          {"exercicio": "Levantamento Terra", "musculo": "posterior", "series": 4, "reps_alvo": "4-6"},
+          {"exercicio": "Agachamento Búlgaro", "musculo": "quadriceps", "series": 4, "reps_alvo": "6-10"},
+          {"exercicio": "Cadeira Flexora", "musculo": "posterior", "series": 3, "reps_alvo": "10-12"},
+          {"exercicio": "Panturrilha Sentado", "musculo": "panturrilha", "series": 4, "reps_alvo": "12-15"},
+          {"exercicio": "Ab Wheel ou Prancha Dinâmica", "musculo": "core", "series": 3, "reps_alvo": "8-12"}
+        ]
+      }
+    },
+    {
+      "numero": 7,
+      "nome": "Manutenção Avançada",
+      "semanas": 12,
+      "frequencia_semanal": 2,
+      "rpe_alvo": 7,
+      "rir_alvo": 3,
+      "deload_a_cada_semanas": 4,
+      "descanso_segundos": "90-120",
+      "sets_por_musculo_semana": {"min": 8, "max": 12},
+      "split": "Upper/Lower 2x/semana",
+      "nota": "Manter ganhos com periodização fluida. Ajustar conforme demanda do BJJ.",
+      "treinos": {
+        "A": [
+          {"exercicio": "Supino Plano", "musculo": "peitoral", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Puxada Alta", "musculo": "costas", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Supino Inclinado com Halteres", "musculo": "peitoral", "series": 3, "reps_alvo": "10-12"},
+          {"exercicio": "Remada Curvada", "musculo": "costas", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Desenvolvimento Ombros", "musculo": "ombros", "series": 3, "reps_alvo": "10-12"},
+          {"exercicio": "Tríceps Pulley", "musculo": "tríceps", "series": 2, "reps_alvo": "10-15"},
+          {"exercicio": "Rosca Direta", "musculo": "bíceps", "series": 2, "reps_alvo": "10-15"}
+        ],
+        "B": [
+          {"exercicio": "Agachamento", "musculo": "quadriceps", "series": 4, "reps_alvo": "8-10"},
+          {"exercicio": "Terra Romeno", "musculo": "posterior", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Leg Press", "musculo": "quadriceps", "series": 3, "reps_alvo": "10-15"},
+          {"exercicio": "Cadeira Flexora", "musculo": "posterior", "series": 3, "reps_alvo": "10-12"},
+          {"exercicio": "Panturrilha em Pé", "musculo": "panturrilha", "series": 3, "reps_alvo": "15-20"},
+          {"exercicio": "Prancha", "musculo": "core", "series": 3, "reps_alvo": "45-60s"}
+        ]
+      }
+    }
+  ]
+}
