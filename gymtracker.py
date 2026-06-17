@@ -232,6 +232,34 @@ def capturar_obs(obs_atual: str) -> str:
     return obs_atual
 
 
+# ── Peso corporal ────────────────────────────────────────────────────────────
+
+def ask_peso_corporal() -> float | None:
+    prompt = " Peso corporal (kg, ↵ pula): "
+    while True:
+        raw = ask(prompt, "")
+        if not raw:
+            return None
+        try:
+            valor = float(raw.replace(",", "."))
+            if 30 <= valor <= 300:
+                return valor
+        except ValueError:
+            pass
+        prompt = " Valor inválido. Peso corporal (kg, ↵ pula): "
+
+
+def registrar_peso_corporal(data_str: str, horario: str, peso_kg: float, refeicao: str) -> None:
+    path = TREINOS_DIR / "peso_corporal.csv"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    novo = not path.exists()
+    with open(path, "a", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=["data", "horario", "peso_kg", "refeicao"])
+        if novo:
+            writer.writeheader()
+        writer.writerow({"data": data_str, "horario": horario, "peso_kg": peso_kg, "refeicao": refeicao})
+
+
 # ── Descanso (cronômetro passivo) ───────────────────────────────────────────────
 
 def parse_descanso(s: str) -> int:
@@ -400,6 +428,14 @@ def registrar_treino(cfg: dict, prog: dict, fase_idx: int, tipo: str, data_reg: 
     print(f" Treino {tipo}  ·  {fase['nome']}  ·  {fmt(data_reg)}")
     print(f" RIR alvo: {rir_alvo}  ·  Descanso: {descanso}s")
     sep()
+
+    # ── Peso corporal (antes de beber água) ─────────────────────────────────────
+    print()
+    peso_corp = ask_peso_corporal()
+    if peso_corp is not None:
+        horario  = datetime.now().strftime("%H:%M")
+        refeicao = ask(" Refeição antes (ex: jejum, 2h atrás, ↵ pula): ", "")
+        registrar_peso_corporal(fmt(data_reg), horario, peso_corp, refeicao)
 
     # ── Pré-treino ────────────────────────────────────────────────────────────
     print()
