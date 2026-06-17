@@ -348,14 +348,31 @@ def registrar_treino(cfg: dict, prog: dict, fase_idx: int, tipo: str, data_reg: 
 
     rows: list[dict] = []
 
-    for ex_idx, ex in enumerate(exercicios, 1):
+    pendentes = list(exercicios)
+    total     = len(exercicios)
+
+    while pendentes:
+        sep()
+        print(f" Pendentes ({len(pendentes)}/{total} restantes):")
+        for i, ex in enumerate(pendentes, 1):
+            print(f"  {i}. {ex['exercicio']}  ·  {ex.get('series',3)} × {ex.get('reps_alvo','8-12')}")
+        print()
+        escolha = ask(" Qual fazer agora (número): ")
+        try:
+            idx = int(escolha) - 1
+            assert 0 <= idx < len(pendentes)
+        except (ValueError, AssertionError):
+            print(" Opção inválida.")
+            continue
+
+        ex          = pendentes.pop(idx)
         nome_ex     = ex["exercicio"]
         series_alvo = ex.get("series", 3)
         reps_alvo   = ex.get("reps_alvo", "8-12")
         musculo     = ex.get("musculo", "")
 
         sep()
-        print(f" [{ex_idx}/{len(exercicios)}]  {nome_ex}  ·  {series_alvo} × {reps_alvo}")
+        print(f" {nome_ex}  ·  {series_alvo} × {reps_alvo}")
 
         peso_sug, sug_msg = suggest_peso(nome_ex, rir_alvo)
         if peso_sug is not None:

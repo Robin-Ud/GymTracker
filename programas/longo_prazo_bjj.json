@@ -16,15 +16,15 @@
       "nota": "Prioridade: técnica e hábito. Não treinar perto da falha.",
       "treinos": {
         "A": [
-          {"exercicio": "Agachamento ou Leg Press", "musculo": "quadriceps", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Agachamento", "musculo": "quadriceps", "series": 3, "reps_alvo": "8-12"},
           {"exercicio": "Supino Plano", "musculo": "peitoral", "series": 3, "reps_alvo": "8-12"},
-          {"exercicio": "Remada Curvada ou Máquina", "musculo": "costas", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Remada Curvada", "musculo": "costas", "series": 3, "reps_alvo": "8-12"},
           {"exercicio": "Desenvolvimento Ombros", "musculo": "ombros", "series": 3, "reps_alvo": "8-12"},
           {"exercicio": "Prancha", "musculo": "core", "series": 3, "reps_alvo": "30-60s"}
         ],
         "B": [
-          {"exercicio": "Terra Romeno ou Cadeira Flexora", "musculo": "posterior", "series": 3, "reps_alvo": "8-12"},
-          {"exercicio": "Flexões ou Supino Inclinado", "musculo": "peitoral", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Cadeira Flexora", "musculo": "posterior", "series": 3, "reps_alvo": "8-12"},
+          {"exercicio": "Supino Inclinado", "musculo": "peitoral", "series": 3, "reps_alvo": "8-12"},
           {"exercicio": "Puxada Alta", "musculo": "costas", "series": 3, "reps_alvo": "8-12"},
           {"exercicio": "Elevação Lateral", "musculo": "ombros", "series": 3, "reps_alvo": "8-12"},
           {"exercicio": "Crunch", "musculo": "core", "series": 3, "reps_alvo": "15-20"}
@@ -185,7 +185,7 @@
           {"exercicio": "Agachamento Búlgaro", "musculo": "quadriceps", "series": 4, "reps_alvo": "6-10"},
           {"exercicio": "Cadeira Flexora", "musculo": "posterior", "series": 3, "reps_alvo": "10-12"},
           {"exercicio": "Panturrilha Sentado", "musculo": "panturrilha", "series": 4, "reps_alvo": "12-15"},
-          {"exercicio": "Ab Wheel ou Prancha Dinâmica", "musculo": "core", "series": 3, "reps_alvo": "8-12"}
+          {"exercicio": "Prancha Dinâmica", "musculo": "core", "series": 3, "reps_alvo": "8-12"}
         ]
       }
     },
