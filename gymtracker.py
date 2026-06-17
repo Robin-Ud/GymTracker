@@ -212,10 +212,15 @@ def set_feedback(rir_val: int | str, rir_alvo: int) -> str:
 # ── Entrada de série (peso/reps/rir navegável) ──────────────────────────────────
 
 CAMPO_INFO = {
-    "peso": {"label": "peso (kg)", "caster": lambda s: float(s.replace(",", ".")), "min": 0, "max": 500},
-    "reps": {"label": "reps",      "caster": int,                                  "min": 0, "max": 200},
-    "rir":  {"label": "RIR",       "caster": int,                                  "min": 0, "max": 10},
+    "peso":  {"label": "peso (kg)", "caster": lambda s: float(s.replace(",", ".")), "min": 0, "max": 500},
+    "reps":  {"label": "reps",      "caster": int,                                  "min": 0, "max": 200},
+    "rir":   {"label": "RIR",       "caster": int,                                  "min": 0, "max": 10},
+    "tempo": {"label": "tempo (s)", "caster": int,                                  "min": 0, "max": 600},
 }
+
+
+def is_exercicio_tempo(reps_alvo: str) -> bool:
+    return reps_alvo.strip().lower().endswith("s")
 
 
 def capturar_obs(obs_atual: str) -> str:
@@ -438,14 +443,18 @@ def registrar_treino(cfg: dict, prog: dict, fase_idx: int, tipo: str, data_reg: 
         sep()
         print(f" {nome_ex}  ·  {series_alvo} × {reps_alvo}")
 
-        peso_sug, sug_msg = suggest_peso(nome_ex, rir_alvo)
-        if peso_sug is not None:
-            print(f" ↳ Sugerido: {peso_sug:.1f} kg  ({sug_msg})")
+        eh_tempo = is_exercicio_tempo(reps_alvo)
+        if eh_tempo:
+            peso_sug = None
         else:
-            print(f" ↳ {sug_msg}")
+            peso_sug, sug_msg = suggest_peso(nome_ex, rir_alvo)
+            if peso_sug is not None:
+                print(f" ↳ Sugerido: {peso_sug:.1f} kg  ({sug_msg})")
+            else:
+                print(f" ↳ {sug_msg}")
         print()
 
-        campos = ("peso", "reps", "rir")
+        campos = ("tempo",) if eh_tempo else ("peso", "reps", "rir")
         sets_data: list[dict] = [dict.fromkeys(campos) for _ in range(series_alvo)]
         row_idx_by_set: list[int | None] = [None] * series_alvo
         obs_draft  = ""
@@ -502,7 +511,7 @@ def registrar_treino(cfg: dict, prog: dict, fase_idx: int, tipo: str, data_reg: 
 
             sets_data[s_idx][campo] = valor
 
-            if campo == "reps" and s_idx + 1 < series_alvo:
+            if campo in ("reps", "tempo") and s_idx + 1 < series_alvo:
                 cronometro = iniciar_descanso(descanso_seg)
 
             if f_idx < len(campos) - 1:
@@ -510,12 +519,15 @@ def registrar_treino(cfg: dict, prog: dict, fase_idx: int, tipo: str, data_reg: 
                 continue
 
             # série completa
-            reps_feitas = sets_data[s_idx]["reps"]
-            peso_kg     = sets_data[s_idx]["peso"]
-            rir_val     = sets_data[s_idx]["rir"]
-            fb = set_feedback(rir_val, rir_alvo)
-            if fb:
-                print(f"   {fb}")
+            if eh_tempo:
+                reps_feitas, peso_kg, rir_val = sets_data[s_idx]["tempo"], 0.0, ""
+            else:
+                reps_feitas = sets_data[s_idx]["reps"]
+                peso_kg     = sets_data[s_idx]["peso"]
+                rir_val     = sets_data[s_idx]["rir"]
+                fb = set_feedback(rir_val, rir_alvo)
+                if fb:
+                    print(f"   {fb}")
             print()
 
             row = {
