@@ -209,6 +209,24 @@ def set_feedback(rir_val: int | str, rir_alvo: int) -> str:
     return             "→ Pesado! Reduza 2.5 kg na próxima série"
 
 
+# ── Entrada de série (peso/reps/rir navegável) ──────────────────────────────────
+
+CAMPO_INFO = {
+    "peso": {"label": "peso (kg)", "caster": lambda s: float(s.replace(",", ".")), "min": 0, "max": 500},
+    "reps": {"label": "reps",      "caster": int,                                  "min": 0, "max": 200},
+    "rir":  {"label": "RIR",       "caster": int,                                  "min": 0, "max": 10},
+}
+
+
+def capturar_obs(obs_atual: str) -> str:
+    if obs_atual:
+        print(f"   Obs atual: {obs_atual}")
+    nova = ask("   Obs (adicionar): ", "")
+    if nova:
+        return f"{obs_atual}; {nova}" if obs_atual else nova
+    return obs_atual
+
+
 # ── Rest timer ────────────────────────────────────────────────────────────────
 
 def parse_descanso(s: str) -> int:
@@ -414,32 +432,69 @@ def registrar_treino(cfg: dict, prog: dict, fase_idx: int, tipo: str, data_reg: 
             print(f" ↳ {sug_msg}")
         print()
 
-        for s in range(1, series_alvo + 1):
-            print(f"   Série {s}/{series_alvo}")
-            peso_str = ask("     peso (kg) : ", "0")
-            try:
-                peso_kg = float(peso_str.replace(",", "."))
-            except ValueError:
-                peso_kg = 0.0
+        campos = ("peso", "reps", "rir")
+        sets_data: list[dict] = [dict.fromkeys(campos) for _ in range(series_alvo)]
+        row_idx_by_set: list[int | None] = [None] * series_alvo
+        obs_draft = ""
+        s_idx, f_idx = 0, 0
 
-            reps_str = ask("     reps      : ", "0")
-            try:
-                reps = int(reps_str)
-            except ValueError:
-                reps = 0
+        while s_idx < series_alvo:
+            campo = campos[f_idx]
+            s = s_idx + 1
 
-            rir_str  = ask(f"     RIR   ({rir_alvo}) : ", str(rir_alvo))
-            try:
-                rir = int(rir_str)
-            except ValueError:
-                rir = rir_alvo
+            if f_idx == 0:
+                print(f"   Série {s}/{series_alvo}")
 
-            fb = set_feedback(rir, rir_alvo)
+            info = CAMPO_INFO[campo]
+            default_val = sets_data[s_idx - 1][campo] if s_idx > 0 else None
+            sufixo = f" [{default_val}]" if default_val is not None else ""
+            raw = ask(f"     {info['label']}{sufixo} (- corrige, obs anota): ", "").strip()
+
+            if raw == "-":
+                if f_idx == 0:
+                    if s_idx == 0:
+                        print(" Não há nada anterior pra corrigir.")
+                        continue
+                    s_idx -= 1
+                    f_idx = len(campos) - 1
+                else:
+                    f_idx -= 1
+                continue
+
+            if raw.lower() == "obs":
+                obs_draft = capturar_obs(obs_draft)
+                continue
+
+            if raw == "":
+                if default_val is None:
+                    print(" Valor obrigatório — digite algo.")
+                    continue
+                valor = default_val
+            else:
+                try:
+                    valor = info["caster"](raw)
+                    if not (info["min"] <= valor <= info["max"]):
+                        raise ValueError
+                except ValueError:
+                    print(" Valor inválido — tente novamente.")
+                    continue
+
+            sets_data[s_idx][campo] = valor
+
+            if f_idx < len(campos) - 1:
+                f_idx += 1
+                continue
+
+            # série completa
+            reps_feitas = sets_data[s_idx]["reps"]
+            peso_kg     = sets_data[s_idx]["peso"]
+            rir_val     = sets_data[s_idx]["rir"]
+            fb = set_feedback(rir_val, rir_alvo)
             if fb:
                 print(f"   {fb}")
             print()
 
-            rows.append({
+            row = {
                 "data":          fmt(data_reg),
                 "semana_treino": semana,
                 "fase":          fase["numero"],
@@ -449,19 +504,30 @@ def registrar_treino(cfg: dict, prog: dict, fase_idx: int, tipo: str, data_reg: 
                 "estresse":      estresse,
                 "exercicio":     nome_ex,
                 "serie":         s,
-                "reps_feitas":   reps,
+                "reps_feitas":   reps_feitas,
                 "peso_kg":       peso_kg,
-                "rir":           rir,
+                "rir":           rir_val,
                 "session_rpe":   "",
                 "detalhes":      musculo,
-            })
+            }
+            if row_idx_by_set[s_idx] is None:
+                rows.append(row)
+                row_idx_by_set[s_idx] = len(rows) - 1
+            else:
+                rows[row_idx_by_set[s_idx]] = row
 
-            if s < series_alvo:
+            if s_idx + 1 < series_alvo:
                 rest_timer(descanso_seg)
 
-        obs = ask(" Obs (opcional): ", "")
-        if obs:
-            rows[-1]["detalhes"] = obs
+            s_idx += 1
+            f_idx = 0
+
+        if obs_draft:
+            print(f" Obs anotadas: {obs_draft}")
+        extra = ask(" Obs (opcional, enter mantém): ", "")
+        obs_final = f"{obs_draft}; {extra}" if (obs_draft and extra) else (extra or obs_draft)
+        if obs_final:
+            rows[-1]["detalhes"] = obs_final
         print()
 
     # ── Session RPE ───────────────────────────────────────────────────────────
