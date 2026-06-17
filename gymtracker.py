@@ -6,10 +6,12 @@ from __future__ import annotations
 import atexit
 import csv
 import json
+import select
 import shutil
 import subprocess
 import sys
 import tempfile
+import time
 from datetime import date, datetime
 from pathlib import Path
 
@@ -207,6 +209,36 @@ def set_feedback(rir_val: int | str, rir_alvo: int) -> str:
     return             "→ Pesado! Reduza 2.5 kg na próxima série"
 
 
+# ── Rest timer ────────────────────────────────────────────────────────────────
+
+def parse_descanso(s: str) -> int:
+    """Parse '60-90' or '90' into a single rest duration in seconds."""
+    nums = [int(p) for p in s.replace("s", "").split("-") if p.strip().isdigit()]
+    return sum(nums) // len(nums) if nums else 60
+
+
+def rest_timer(seconds: int) -> None:
+    """Countdown shown between sets. Press Enter (or Ctrl-C) to skip early."""
+    if seconds <= 0:
+        return
+    print(f"   Descanso: {seconds}s  (↵ pula)")
+    inicio = time.time()
+    try:
+        while True:
+            restante = seconds - (time.time() - inicio)
+            if restante <= 0:
+                break
+            sys.stdout.write(f"\r   ⏱  {int(restante) + 1:>3}s restantes ")
+            sys.stdout.flush()
+            pronto, _, _ = select.select([sys.stdin], [], [], 0.2)
+            if pronto:
+                sys.stdin.readline()
+                break
+    except KeyboardInterrupt:
+        pass
+    sys.stdout.write("\r   ✓ Descanso concluído            \n\n")
+
+
 # ── Program / phase helpers ───────────────────────────────────────────────────
 
 def get_fase_idx(prog: dict, semana_treino: int) -> tuple[int, int]:
@@ -322,9 +354,10 @@ def registrar_treino(cfg: dict, prog: dict, fase_idx: int, tipo: str, data_reg: 
         print(f" Nenhum exercício definido para Treino {tipo} nesta fase.")
         return
 
-    semana   = cfg["semana_treino"]
-    rir_alvo = fase.get("rir_alvo", 4)
-    descanso = fase.get("descanso_segundos", "60-90")
+    semana      = cfg["semana_treino"]
+    rir_alvo    = fase.get("rir_alvo", 4)
+    descanso    = fase.get("descanso_segundos", "60-90")
+    descanso_seg = parse_descanso(descanso)
 
     print()
     sep()
@@ -422,6 +455,9 @@ def registrar_treino(cfg: dict, prog: dict, fase_idx: int, tipo: str, data_reg: 
                 "session_rpe":   "",
                 "detalhes":      musculo,
             })
+
+            if s < series_alvo:
+                rest_timer(descanso_seg)
 
         obs = ask(" Obs (opcional): ", "")
         if obs:
