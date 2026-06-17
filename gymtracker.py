@@ -105,7 +105,8 @@ def csv_path_for(d: date) -> Path:
 
 
 def all_csv_paths() -> list[Path]:
-    return sorted(TREINOS_DIR.glob("*.csv")) if TREINOS_DIR.exists() else []
+    """Per-set training logs only — excludes peso_corporal.csv (different schema)."""
+    return sorted(TREINOS_DIR.glob("treinos_*.csv")) if TREINOS_DIR.exists() else []
 
 
 def parse_date(s: str) -> date:
