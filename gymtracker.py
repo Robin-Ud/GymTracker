@@ -6,11 +6,11 @@ from __future__ import annotations
 import atexit
 import csv
 import json
-import select
 import shutil
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 from datetime import date, datetime
 from pathlib import Path
@@ -227,7 +227,7 @@ def capturar_obs(obs_atual: str) -> str:
     return obs_atual
 
 
-# ── Rest timer ────────────────────────────────────────────────────────────────
+# ── Descanso (cronômetro passivo) ───────────────────────────────────────────────
 
 def parse_descanso(s: str) -> int:
     """Parse '60-90' or '90' into a single rest duration in seconds."""
@@ -235,26 +235,39 @@ def parse_descanso(s: str) -> int:
     return sum(nums) // len(nums) if nums else 60
 
 
-def rest_timer(seconds: int) -> None:
-    """Countdown shown between sets. Press Enter (or Ctrl-C) to skip early."""
-    if seconds <= 0:
-        return
-    print(f"   Descanso: {seconds}s  (↵ pula)")
+def iniciar_descanso(segundos: int) -> dict:
+    """Start a passive rest stopwatch in the background. Never blocks input —
+    RIR (current set) and peso (next set) prompts keep working normally while
+    this counts; the real elapsed time is only read back via finalizar_descanso."""
+    stop_event = threading.Event()
     inicio = time.time()
-    try:
-        while True:
-            restante = seconds - (time.time() - inicio)
-            if restante <= 0:
-                break
-            sys.stdout.write(f"\r   ⏱  {int(restante) + 1:>3}s restantes ")
+
+    def _avisar() -> None:
+        if not stop_event.wait(segundos):
+            sys.stdout.write(f"\n   ⏰ já se passaram {segundos}s de descanso\n")
             sys.stdout.flush()
-            pronto, _, _ = select.select([sys.stdin], [], [], 0.2)
-            if pronto:
-                sys.stdin.readline()
-                break
-    except KeyboardInterrupt:
-        pass
-    sys.stdout.write("\r   ✓ Descanso concluído            \n\n")
+
+    threading.Thread(target=_avisar, daemon=True).start()
+    return {"inicio": inicio, "stop_event": stop_event}
+
+
+def finalizar_descanso(cronometro: dict) -> float:
+    cronometro["stop_event"].set()
+    return time.time() - cronometro["inicio"]
+
+
+def fmt_mmss(segundos: float) -> str:
+    m, s = divmod(int(segundos), 60)
+    return f"{m}min{s:02d}s" if m else f"{s}s"
+
+
+def avaliacao_descanso(real: float, alvo: int) -> str:
+    diff = real - alvo
+    if diff <= 5:
+        return "  ✓ dentro do alvo"
+    if diff <= 30:
+        return "  → um pouco acima do alvo"
+    return "  → muito acima do alvo, ficou se distraindo?"
 
 
 # ── Program / phase helpers ───────────────────────────────────────────────────
@@ -435,7 +448,8 @@ def registrar_treino(cfg: dict, prog: dict, fase_idx: int, tipo: str, data_reg: 
         campos = ("peso", "reps", "rir")
         sets_data: list[dict] = [dict.fromkeys(campos) for _ in range(series_alvo)]
         row_idx_by_set: list[int | None] = [None] * series_alvo
-        obs_draft = ""
+        obs_draft  = ""
+        cronometro = None
         s_idx, f_idx = 0, 0
 
         while s_idx < series_alvo:
@@ -444,6 +458,10 @@ def registrar_treino(cfg: dict, prog: dict, fase_idx: int, tipo: str, data_reg: 
 
             if f_idx == 0:
                 print(f"   Série {s}/{series_alvo}")
+            if f_idx == 0 and cronometro is not None:
+                real = finalizar_descanso(cronometro)
+                cronometro = None
+                print(f"   ↳ Descanso real: {fmt_mmss(real)} (alvo {descanso_seg}s){avaliacao_descanso(real, descanso_seg)}")
 
             info = CAMPO_INFO[campo]
             default_val = sets_data[s_idx - 1][campo] if s_idx > 0 else None
@@ -451,6 +469,9 @@ def registrar_treino(cfg: dict, prog: dict, fase_idx: int, tipo: str, data_reg: 
             raw = ask(f"     {info['label']}{sufixo} (- corrige, obs anota): ", "").strip()
 
             if raw == "-":
+                if cronometro is not None:
+                    cronometro["stop_event"].set()
+                    cronometro = None
                 if f_idx == 0:
                     if s_idx == 0:
                         print(" Não há nada anterior pra corrigir.")
@@ -480,6 +501,9 @@ def registrar_treino(cfg: dict, prog: dict, fase_idx: int, tipo: str, data_reg: 
                     continue
 
             sets_data[s_idx][campo] = valor
+
+            if campo == "reps" and s_idx + 1 < series_alvo:
+                cronometro = iniciar_descanso(descanso_seg)
 
             if f_idx < len(campos) - 1:
                 f_idx += 1
@@ -515,9 +539,6 @@ def registrar_treino(cfg: dict, prog: dict, fase_idx: int, tipo: str, data_reg: 
                 row_idx_by_set[s_idx] = len(rows) - 1
             else:
                 rows[row_idx_by_set[s_idx]] = row
-
-            if s_idx + 1 < series_alvo:
-                rest_timer(descanso_seg)
 
             s_idx += 1
             f_idx = 0
