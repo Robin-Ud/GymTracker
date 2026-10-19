@@ -20,20 +20,26 @@ from pathlib import Path
 _SCRIPT_DIR = Path(__file__).parent
 TEST_MODE   = "--test" in sys.argv
 
+# Seus dados (estado + treinos) ficam em pessoal/, fora do git deste repo.
+_DADOS_REAIS = _SCRIPT_DIR / "pessoal"
+
 if TEST_MODE:
     _test_dir = Path(tempfile.mkdtemp(prefix="gymtracker_test_"))
-    shutil.copy2(_SCRIPT_DIR / "configs.json", _test_dir / "configs.json")
+    _cfg_orig = _DADOS_REAIS / "configs.json"
+    if not _cfg_orig.exists():
+        _cfg_orig = _SCRIPT_DIR / "exemplo" / "configs.json"
+    (_test_dir / "pessoal" / "treinos").mkdir(parents=True)
+    shutil.copy2(_cfg_orig, _test_dir / "pessoal" / "configs.json")
     shutil.copytree(_SCRIPT_DIR / "programas", _test_dir / "programas")
-    (_test_dir / "treinos").mkdir()
-    if (_SCRIPT_DIR / "treinos").exists():
-        for _f in (_SCRIPT_DIR / "treinos").glob("*.csv"):
-            shutil.copy2(_f, _test_dir / "treinos" / _f.name)
+    if (_DADOS_REAIS / "treinos").exists():
+        for _f in (_DADOS_REAIS / "treinos").glob("*.csv"):
+            shutil.copy2(_f, _test_dir / "pessoal" / "treinos" / _f.name)
     BASE_DIR = _test_dir
 
     def _test_cleanup() -> None:
         print()
-        for _csv in sorted((BASE_DIR / "treinos").glob("*.csv")):
-            _orig = _SCRIPT_DIR / "treinos" / _csv.name
+        for _csv in sorted((BASE_DIR / "pessoal" / "treinos").glob("*.csv")):
+            _orig = _DADOS_REAIS / "treinos" / _csv.name
             added: list[str] = []
             if _orig.exists():
                 res = subprocess.run(
@@ -63,9 +69,15 @@ else:
 
 # ── Constants ─────────────────────────────────────────────────────────────────
 
-CONFIGS_PATH  = BASE_DIR / "configs.json"
+DADOS_DIR     = BASE_DIR / "pessoal"
+CONFIGS_PATH  = DADOS_DIR / "configs.json"
 PROGRAMAS_DIR = BASE_DIR / "programas"
-TREINOS_DIR   = BASE_DIR / "treinos"
+TREINOS_DIR   = DADOS_DIR / "treinos"
+
+# primeira vez sem pessoal/: começa do exemplo/
+if not CONFIGS_PATH.exists():
+    DADOS_DIR.mkdir(exist_ok=True)
+    shutil.copy2(BASE_DIR / "exemplo" / "configs.json", CONFIGS_PATH)
 
 CSV_HEADER = [
     "data", "semana_treino", "fase", "treino",

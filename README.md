@@ -80,7 +80,7 @@ Durante o registro de treino, o script sugere carga antes de cada exercício e d
 
 ## Estrutura de dados
 
-Cada série vira uma linha em `treinos/treinos_AAAA.csv`:
+Cada série vira uma linha em `pessoal/treinos/treinos_AAAA.csv`:
 
 | Coluna | Descrição |
 |--------|-----------|
@@ -101,11 +101,11 @@ Cada série vira uma linha em `treinos/treinos_AAAA.csv`:
 
 ## Configuração
 
-`configs.json` — estado persistido entre sessões:
+`pessoal/configs.json` — estado persistido entre sessões (na primeira vez é copiado de `exemplo/configs.json`):
 
 ```json
 {
-  "atleta": "Matheus",
+  "atleta": "Atleta",
   "programa_ativo": "longo_prazo_bjj",
   "semana_treino": 1,
   "semana_treino_inicio": "18/05/26",
@@ -146,11 +146,13 @@ Para adicionar um programa novo: crie `programas/<nome>.json` seguindo a estrutu
 
 ```
 gymtracker.py          ← script único
-gymtracker.sh          ← wrapper (git pull/push automático)
+gymtracker.sh          ← wrapper (git pull do código; pull/push do pessoal/ se ele for um clone git)
 gymtracker_test.sh     ← modo teste isolado em /tmp
-configs.json           ← estado e configuração global
+exemplo/configs.json   ← estado inicial (copiado pro pessoal/ na primeira vez)
 programas/
   longo_prazo_bjj.json ← plano de 7 fases, 52 semanas
-treinos/
-  treinos_2026.csv     ← registros append-only
+pessoal/               ← seus dados, fora do git (pode ser um clone de um repo privado seu)
+  configs.json         ← estado e configuração global
+  treinos/
+    treinos_2026.csv   ← registros append-only
 ```
